@@ -84,6 +84,7 @@ async def create_access_token(session, user_email) -> str:
 
         # Данные для токена
         data = {
+            'id': user_info.id,
             'email': user_info.email,
             'username': user_info.username,
             'superuser': user_info.is_superuser,
@@ -122,6 +123,7 @@ async def get_current_user(request: Request):
         data = verify_token(jwt_token)
 
         user = UserRead(
+            id=data['id'],
             email=data['email'],
             username=data['username']
         )
