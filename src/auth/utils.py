@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status, Request
+from fastapi import Request
 from sqlalchemy import select
 from passlib.context import CryptContext
 import jwt
