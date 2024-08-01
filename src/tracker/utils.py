@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from datetime import datetime, timedelta
 
 from src.tracker.models import Account, Category, Operation
@@ -63,6 +63,23 @@ async def delete_account(session, account: AccountDelete):
     try:
         account_info = await session.get(Account, account.id)
 
+        # Получение всех операций связанных с этим счетом
+        operations = await session.execute(
+            select(Operation)
+                .where(
+                    or_(
+                        Operation.from_account == account_info.account_id,
+                        Operation.to_account == account_info.account_id
+                    )
+                )
+            )
+        operations = operations.scalars().all()
+
+        # Удаление операций
+        for operation in operations:
+            await session.delete(operation)
+
+        # Удаление счета
         await session.delete(account_info)
 
         # Добавление данных в бд и сохранение
@@ -134,21 +151,23 @@ async def create_category(session, user: UserRead, category: CategoryCreate):
 async def delete_category(session, user, category: CategoryDelete):
 
     try:
-        # Поиск операций в этой категории
-        result = await session.execute(
-            select(Operation).filter(
-                Operation.user_id == user.id,
-                Operation.operation_type == 'expense',
-                Operation.to_account <= category.id
+        category_info = await session.get(Category, category.id)
+
+        # Получение всех операций связанных с этой категорией
+        operations = await session.execute(
+            select(Operation)
+                .where(
+                    or_(
+                        Operation.from_account == category_info.category_id,
+                        Operation.to_account == category_info.category_id
+                    )
+                )
             )
-        )
-        operations = result.scalars()
+        operations = operations.scalars().all()
 
         # Удаление операций
         for operation in operations:
             await session.delete(operation)
-
-        category_info = await session.get(Category, category.id)
 
         # Удаление категории
         await session.delete(category_info)
