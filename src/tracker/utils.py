@@ -46,6 +46,13 @@ async def create_account(session, user: UserRead, account: AccountCreate):
         # Добавление данных в бд и сохранение
         await session.commit()
 
+        return {
+            'account_id': account_info.account_id,
+            'title': account_info.title,
+            'balance': account_info.balance,
+            'currency': account_info.currency
+        }
+
     except Exception as error:
         raise error
     
@@ -112,6 +119,13 @@ async def create_category(session, user: UserRead, category: CategoryCreate):
         # Добавление данных в бд и сохранение
         await session.commit()
 
+        return {
+            'category_id': category_info.category_id,
+            'title': category_info.title,
+            'category_type': category_info.category_type,
+            'color': category_info.color
+        }
+
     except Exception as error:
         raise error
     
@@ -167,12 +181,19 @@ async def edit_category(session, category: СategoryEdit):
 async def create_operation(session, user: UserRead, operation: OperationCreate):
 
     try:
-        # Вычет баланса со счета
-        account_from = await session.get(Account, operation.from_account)
-        account_from.balance = account_from.balance - operation.amount
-        
+        # В случае пополнения баланса
+        if operation.operation_type == 'income':
+            account_to = await session.get(Account, operation.to_account)
+            account_to.balance = account_to.balance + operation.amount
+
+        # В случае расхода
+        elif operation.operation_type == 'expense':
+            # Вычет баланса со счета
+            account_from = await session.get(Account, operation.from_account)
+            account_from.balance = account_from.balance - operation.amount
+
         # В случае перевода пополнение баланса на втором счету
-        if operation.operation_type == 'transfer':
+        elif operation.operation_type == 'transfer':
             account_to = await session.get(Account, operation.to_account)
 
             # Ошибка перевода в случае разных валют счетов
@@ -197,6 +218,17 @@ async def create_operation(session, user: UserRead, operation: OperationCreate):
 
         # Добавление данных в бд и сохранение
         await session.commit()
+
+        return {
+            'operation_id': operation_info.operation_id,
+            'created_at': operation_info.created_at.strftime('%d.%m.%y'),
+            'operation_type': operation_info.operation_type,
+            'from_account': operation_info.from_account,
+            'to_account': operation_info.to_account,
+            'amount': operation_info.amount,
+            'currency': operation_info.currency,
+            'about': operation_info.about
+        }
 
     except Exception as error:
         raise error

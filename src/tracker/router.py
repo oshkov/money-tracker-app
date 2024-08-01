@@ -98,11 +98,11 @@ async def create_account_route(
             return JSONResponse(content=response_data, status_code=409)
 
         # Создание счета пользователя
-        await create_account(session, user, account)
+        new_account = await create_account(session, user, account)
 
         response_data = {
             'status': 'success',
-            'data': None,
+            'data': new_account,
             'detail': None
         }
         return JSONResponse(content=response_data, status_code=200)
@@ -258,11 +258,11 @@ async def create_category_route(
             return JSONResponse(content=response_data, status_code=409)
 
         # Создание категории
-        await create_category(session, user, category)
+        new_category = await create_category(session, user, category)
 
         response_data = {
             'status': 'success',
-            'data': None,
+            'data': new_category,
             'detail': None
         }
         return JSONResponse(content=response_data, status_code=200)
@@ -408,11 +408,11 @@ async def create_operation_route(
             return JSONResponse(content=response_data, status_code=401)
 
         # Создание операции
-        await create_operation(session, user, operation)
+        new_operation = await create_operation(session, user, operation)
 
         response_data = {
             'status': 'success',
-            'data': None,
+            'data': new_operation,
             'detail': None
         }
         return JSONResponse(content=response_data, status_code=200)
