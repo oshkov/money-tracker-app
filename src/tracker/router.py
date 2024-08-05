@@ -63,6 +63,7 @@ async def get_accounts_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -108,6 +109,7 @@ async def create_account_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -143,6 +145,7 @@ async def delete_account_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -189,6 +192,7 @@ async def edit_account_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -223,6 +227,7 @@ async def get_categories_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -268,6 +273,7 @@ async def create_category_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -303,6 +309,7 @@ async def delete_category_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -349,6 +356,7 @@ async def edit_category_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -383,6 +391,7 @@ async def get_operations_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -426,6 +435,7 @@ async def create_operation_route(
         return JSONResponse(content=response_data, status_code=400)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -461,6 +471,7 @@ async def delete_operation_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),
@@ -496,6 +507,7 @@ async def edit_category_route(
         return JSONResponse(content=response_data, status_code=200)
 
     except Exception as error:
+        print(error)
         response_data = {
             'status': 'error',
             'data': str(error),

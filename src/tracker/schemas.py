@@ -26,8 +26,9 @@ class CategoryDelete(BaseModel):
     id: int
 
 
-class СategoryEdit(CategoryCreate, CategoryDelete):
-    pass
+class СategoryEdit(CategoryDelete):
+    title: str
+    color: Optional[str] = None
 
 
 class OperationCreate(BaseModel):
@@ -43,5 +44,9 @@ class OperationDelete(BaseModel):
     id: int
 
 
-class OperationEdit(OperationCreate, OperationDelete):
-    pass
+class OperationEdit(OperationDelete):
+    from_account: int
+    to_account: int
+    amount: float
+    currency: str
+    about: Optional[str] = None

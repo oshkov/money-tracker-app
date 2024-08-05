@@ -186,7 +186,6 @@ async def edit_category(session, category: СategoryEdit):
         account_info = await session.get(Category, category.id)
 
         account_info.title = category.title
-        account_info.category_type = category.category_type
         account_info.color = category.color
 
         # Добавление данных в бд и сохранение
@@ -274,7 +273,6 @@ async def edit_operation(session, operation: OperationEdit):
     try:
         operation_info = await session.get(Operation, operation.id)
 
-        operation_info.operation_type = operation.operation_type
         operation_info.from_account = operation.from_account
         operation_info.to_account = operation.to_account
         operation_info.amount = operation.amount
