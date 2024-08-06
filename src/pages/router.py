@@ -29,7 +29,18 @@ def main_page(request: Request):
 
 
 @router.get("/dashboard")
-def dashboard(user: UserRead = Depends(get_current_user)):
+def dashboard(request: Request, user: UserRead = Depends(get_current_user)):
+    # Проверка пользователя
     if user is None:
         return RedirectResponse(url='/login')
-    return f"Hello, {user.username}"
+
+    return templates.TemplateResponse("dashboard.html", {"request": request, "user": user})
+
+
+@router.get("/operations")
+def dashboard(request: Request, user: UserRead = Depends(get_current_user)):
+    # Проверка пользователя
+    if user is None:
+        return RedirectResponse(url='/login')
+
+    return templates.TemplateResponse("operations.html", {"request": request, "user": user})
