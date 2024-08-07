@@ -71,7 +71,7 @@ function getCategories() {
 }
 
 
-function getOperations(params) {
+function getOperations() {
     // Запрос на получение операций пользователя
     fetch('get-operations', {
         method: 'GET'
@@ -414,6 +414,10 @@ function updateCategories(categories) {
                 // Вставка данных в инпуты
                 document.getElementById('operation-expense-create-account-to').value = categoryID
 
+                // Очистка инпутов
+                document.getElementById('operation-create-expense-amount').value = null
+                document.getElementById('operation-create-expense-about').value = null
+
                 // Добавление id в класс кнопки изменения и удаления категории
                 document.getElementById('category-expense-edit-button').className = `${categoryID} ${document.getElementById('category-expense-edit-button').className}`
                 document.getElementById('category-edit-button').className = `${categoryID} ${document.getElementById('category-edit-button').className}`
@@ -427,6 +431,10 @@ function updateCategories(categories) {
 
                 // Вставка данных в инпуты
                 document.getElementById('operation-income-create-category').value = categoryID
+
+                // Очистка инпутов
+                document.getElementById('operation-create-income-amount').value = null
+                document.getElementById('operation-create-income-about').value = null
 
                 // Добавление id в класс кнопки изменения и удаления категории
                 document.getElementById('category-income-edit-button').className = `${categoryID} ${document.getElementById('category-income-edit-button').className}`
@@ -543,7 +551,7 @@ function deleteCategory(jsonData) {
 
     .then(response => response.json())
     .then(data => {
-        return data            
+        return data
     })
     .catch((error) => {});
 }

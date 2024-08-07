@@ -385,7 +385,8 @@ buttonCreateExpense.addEventListener('click', function(event) {
     const accountTo = document.getElementById('operation-expense-create-account-to').value
     const amount = document.getElementById('operation-create-expense-amount').value
     const currency = document.getElementById('operation-create-expense-currency').value
-    const about = document.getElementById('operation-create-expense-about').value
+    let about = document.getElementById('operation-create-expense-about').value
+    about = about === "" ? null : about;
 
     if (accountFrom === '' || accountTo === '' || amount === '') {
         errorCreateExpense.style.display = 'block'
