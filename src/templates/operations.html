@@ -5,8 +5,11 @@
 
 
 {% block content %}
-<h4 class="my-3">Операции в этом месяце</h4>
-<div class="operations-list list-group w-50" id="operations-list">
+<div class="card w-50 full-height" style="border: None">
+    <div class="card-body shadow-lg" style="border-radius: 10px">
+        <h4 class="mb-3">Операции в этом месяце<div class="spinner-border spinner-border-sm ms-2" role="status" id="spinner-operations"></div></h4>
+        <div class="operations-list list-group" id="operations-list"></div>
+    </div>
 </div>
 
 <!-- Модальное окно изменения операции -->

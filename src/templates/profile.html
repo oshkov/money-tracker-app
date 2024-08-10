@@ -1,0 +1,38 @@
+{% extends "menu.html" %}
+
+
+{% block title %}Профиль{% endblock %}
+
+
+{% block content %}
+
+<div class="card full-height" style="border: None">
+    <div class="card-body shadow-lg w-50" style="border-radius: 10px">
+        <form>
+            <h5 class="card-title mb-4">Мой профиль</h5>
+
+            <label for="username" class="form-label">Имя</label>
+            <input id="username" class="form-control mb-3" value="{{ user.username }}">
+            <label for="email" class="form-label">Почта</label>
+            <input id="email" class="form-control mb-3" value="{{ user.email }}">
+            <label for="password" class="form-label">Подтвердить пароль</label>
+            <input type="password" id="password" class="form-control mb-4">
+
+            <div class="alert alert-danger" role="alert" id="alert" style="display: none;"></div>
+
+            <button type="submit" class="btn btn-primary w-auto mb-1" id="button-edit-profile">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border spinner-border-sm m-1" role="status" id="spinner" style="display: none;"></div>
+                    <span id="button-text">Изменить профиль</span>
+                </div>
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+<script src="{{ url_for('static', path='/js/profile.js') }}"></script>
+{% endblock %}

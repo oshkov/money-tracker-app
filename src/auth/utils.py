@@ -131,3 +131,18 @@ async def get_current_user(request: Request):
 
     except:
         return None
+    
+
+# Изменение данных пользователя
+async def edit_user(session, user, new_user_data):
+    try:
+        user_info = await session.get(User, user.id)
+
+        user_info.username = new_user_data.username
+        user_info.email = new_user_data.email
+
+        # Добавление данных в бд и сохранение
+        await session.commit()
+
+    except Exception as error:
+        raise error

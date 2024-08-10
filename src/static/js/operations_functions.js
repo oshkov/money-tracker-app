@@ -117,6 +117,10 @@ function updateOperationsList(operations, categories, accounts) {
     operationsBlock = document.getElementById('operations-list')
     operationsBlock.innerHTML = ''
 
+    // Удаление иконки загрузки
+    const loading = document.getElementById('spinner-operations')
+    loading.style.display = 'none'
+
     for (const operation of operations) {
 
         operationHTML = operationHTMLTemplate(operation, categories, accounts)

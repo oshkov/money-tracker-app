@@ -44,3 +44,12 @@ def dashboard(request: Request, user: UserRead = Depends(get_current_user)):
         return RedirectResponse(url='/login')
 
     return templates.TemplateResponse("operations.html", {"request": request, "user": user})
+
+
+@router.get("/profile")
+def profile(request: Request, user: UserRead = Depends(get_current_user)):
+    # Проверка пользователя
+    if user is None:
+        return RedirectResponse(url='/login')
+
+    return templates.TemplateResponse("profile.html", {"request": request, "user": user})
