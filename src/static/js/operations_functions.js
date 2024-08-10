@@ -70,6 +70,7 @@ function operationHTMLTemplate(operation, categories, accounts) {
         for (const category of categories) {
             if (category.category_id == operation.to_account) {
                 to_account = category.title
+                category_color = category.color
             }
         }
         amount = `-${operation.amount}`
@@ -156,11 +157,15 @@ function updateOperationsList(operations, categories, accounts) {
 
             if (operationType == 'expense') {
                 document.getElementById('operation-edit-amount-label').textContent = 'Расход'
+                document.getElementById('operation-edit-from-account-label').textContent = 'Со счета'
+                document.getElementById('operation-edit-to-account-label').textContent = 'На категорию'
                 updateAccountsSelectors(accounts, 'operation-edit-from-account')
                 updateCtegoriesSelectors(categories, 'operation-edit-to-account')
             }
             if (operationType == 'income') {
                 document.getElementById('operation-edit-amount-label').textContent = 'Доход'
+                document.getElementById('operation-edit-from-account-label').textContent = 'С категории'
+                document.getElementById('operation-edit-to-account-label').textContent = 'На счет'
                 updateAccountsSelectors(accounts, 'operation-edit-to-account')
                 updateCtegoriesSelectors(categories, 'operation-edit-from-account')
             }
