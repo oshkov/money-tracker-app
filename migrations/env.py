@@ -7,8 +7,8 @@ from alembic import context
 
 from src.config import DB_HOST, DB_PORT, DB_USER, DB_NAME, DB_PASSWORD
 from src.database import Base
-from src.auth.models import User
-from src.tracker.models import Operation, Account, Category
+from src.auth.models import *
+from src.tracker.models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
