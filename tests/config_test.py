@@ -23,11 +23,18 @@ app.dependency_overrides[get_async_session] = override_get_async_session
 # Фикстура для тестовой базы данных
 @pytest.fixture(scope='session', autouse=True)
 async def prepare_database():
+
+    # Удаление таблиц при наличии
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+
+    # Создание тестовых таблиц
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
     yield 
 
+    # Удаление тестовых таблиц в бд
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
 

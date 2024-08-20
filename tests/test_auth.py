@@ -1,5 +1,4 @@
 import pytest
-from sqlalchemy import select
 
 from config_test import client, prepare_database
 
