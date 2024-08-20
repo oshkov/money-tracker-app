@@ -13,19 +13,23 @@ router = APIRouter(
 templates = Jinja2Templates(directory="src/templates")
 
 
+@router.get("/")
+def main_page(request: Request):
+    return templates.TemplateResponse("main.html", {"request": request})
+
+
 @router.get("/register")
 def register_page(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
 
 
 @router.get("/login")
-def login_page(request: Request):
+def login_page(request: Request, user: UserRead = Depends(get_current_user)):
+    # Проверка пользователя
+    if user:
+        return RedirectResponse(url='/dashboard')
+
     return templates.TemplateResponse("login.html", {"request": request})
-
-
-@router.get("/")
-def main_page(request: Request):
-    return templates.TemplateResponse("main.html", {"request": request})
 
 
 @router.get("/dashboard")
@@ -38,7 +42,7 @@ def dashboard(request: Request, user: UserRead = Depends(get_current_user)):
 
 
 @router.get("/operations")
-def dashboard(request: Request, user: UserRead = Depends(get_current_user)):
+def operations(request: Request, user: UserRead = Depends(get_current_user)):
     # Проверка пользователя
     if user is None:
         return RedirectResponse(url='/login')
