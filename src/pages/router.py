@@ -7,53 +7,71 @@ from src.auth.utils import get_current_user
 
 
 router = APIRouter(
-    tags=["Pages"]
+    tags=['Pages']
 )
 
-templates = Jinja2Templates(directory="src/templates")
+templates = Jinja2Templates(directory='src/templates')
 
 
-@router.get("/")
+@router.get('/')
 def main_page(request: Request):
-    return templates.TemplateResponse("main.html", {"request": request})
+    # Получение темы из куки
+    theme = request.cookies.get('theme')
+
+    return templates.TemplateResponse('main.html', {'request': request, 'theme': theme})
 
 
-@router.get("/register")
+@router.get('/register')
 def register_page(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
+    # Получение темы из куки
+    theme = request.cookies.get('theme')
+
+    return templates.TemplateResponse('register.html', {'request': request, 'theme': theme})
 
 
-@router.get("/login")
+@router.get('/login')
 def login_page(request: Request, user: UserRead = Depends(get_current_user)):
+    # Получение темы из куки
+    theme = request.cookies.get('theme')
+
     # Проверка пользователя
     if user:
         return RedirectResponse(url='/dashboard')
 
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse('login.html', {'request': request, 'theme': theme})
 
 
-@router.get("/dashboard")
+@router.get('/dashboard')
 def dashboard(request: Request, user: UserRead = Depends(get_current_user)):
+    # Получение темы из куки
+    theme = request.cookies.get('theme')
+
     # Проверка пользователя
     if user is None:
         return RedirectResponse(url='/login')
 
-    return templates.TemplateResponse("dashboard.html", {"request": request, "user": user})
+    return templates.TemplateResponse('dashboard.html', {'request': request, 'user': user, 'theme': theme})
 
 
-@router.get("/operations")
+@router.get('/operations')
 def operations(request: Request, user: UserRead = Depends(get_current_user)):
+    # Получение темы из куки
+    theme = request.cookies.get('theme')
+
     # Проверка пользователя
     if user is None:
         return RedirectResponse(url='/login')
 
-    return templates.TemplateResponse("operations.html", {"request": request, "user": user})
+    return templates.TemplateResponse('operations.html', {'request': request, 'user': user, 'theme': theme})
 
 
-@router.get("/profile")
+@router.get('/profile')
 def profile(request: Request, user: UserRead = Depends(get_current_user)):
+    # Получение темы из куки
+    theme = request.cookies.get('theme')
+
     # Проверка пользователя
     if user is None:
         return RedirectResponse(url='/login')
 
-    return templates.TemplateResponse("profile.html", {"request": request, "user": user})
+    return templates.TemplateResponse('profile.html', {'request': request, 'user': user, 'theme': theme})
