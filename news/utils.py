@@ -5,7 +5,7 @@ import json
 
 
 # Получение новостей
-async def get_news(session, redis):
+async def get_news(redis):
     try:
         # Ключ кэша
         cache_key = 'news'

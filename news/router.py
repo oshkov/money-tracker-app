@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
-from src.database import get_async_session
-from src.news.utils import get_news
-from src.redis import get_redis_client
+from utils import get_news
+from redis import get_redis_client
 
 
 router = APIRouter(
@@ -12,12 +11,11 @@ router = APIRouter(
 
 @router.get('/get-news')
 async def get_accounts_route(
-    session = Depends(get_async_session),
     redis = Depends(get_redis_client)
 ):
     try:
         # Получение новостей
-        news = await get_news(session, redis)
+        news = await get_news(redis)
 
         response_data = {
             'status': 'success',

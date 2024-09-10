@@ -1,6 +1,6 @@
 function getNews() {
     // Запрос на получение новостей
-    return fetch('get-news', {
+    return fetch('http://localhost:8001/get-news', {
         method: 'GET'
     })
 

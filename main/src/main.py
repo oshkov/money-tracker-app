@@ -1,11 +1,9 @@
-from fastapi import FastAPI, Depends, Form
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from src.auth.router import router as auth_router
 from src.pages.router import router as page_router
 from src.tracker.router import router as tracker_router
-from src.news.router import router as news_router
-from src.theme_switcher.router import router as theme_switcher_router
 
 
 app = FastAPI(title='MoneyTrackerApp')
@@ -15,5 +13,3 @@ app.mount('/src/static', StaticFiles(directory='src/static'), name='static')
 app.include_router(auth_router)
 app.include_router(page_router)
 app.include_router(tracker_router)
-app.include_router(news_router)
-app.include_router(theme_switcher_router)
