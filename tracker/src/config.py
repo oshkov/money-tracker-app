@@ -19,11 +19,3 @@ DB_NAME_TEST = os.environ.get('DB_NAME_TEST')
 DB_USER_TEST = os.environ.get('DB_USER_TEST')
 DB_PASSWORD_TEST = os.environ.get('DB_PASSWORD')
 DATABASE_URL_TEST = f'postgresql+asyncpg://{DB_USER_TEST}:{DB_PASSWORD_TEST}@{DB_HOST_TEST}:{DB_PORT_TEST}/{DB_NAME_TEST}'
-
-SECRET_KEY = os.environ.get('SECRET_KEY')
-ALGORITHM = os.environ.get('ALGORITHM')
-HASHING_SCHEME = os.environ.get('HASHING_SCHEME')
-
-REDIS_HOST = os.environ.get('REDIS_HOST')
-REDIS_PORT = os.environ.get('REDIS_PORT')
-REDIS_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'

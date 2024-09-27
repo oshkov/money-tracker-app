@@ -23,7 +23,3 @@ DATABASE_URL_TEST = f'postgresql+asyncpg://{DB_USER_TEST}:{DB_PASSWORD_TEST}@{DB
 SECRET_KEY = os.environ.get('SECRET_KEY')
 ALGORITHM = os.environ.get('ALGORITHM')
 HASHING_SCHEME = os.environ.get('HASHING_SCHEME')
-
-REDIS_HOST = os.environ.get('REDIS_HOST')
-REDIS_PORT = os.environ.get('REDIS_PORT')
-REDIS_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
