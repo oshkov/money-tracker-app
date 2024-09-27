@@ -1,0 +1,349 @@
+{% extends "menu.html" %}
+
+
+{% block title %}Главная{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid mb-5">
+    <div class="row">
+        <div class="col-md-6 px-4">
+            <div class="card full-height" style="border: None">
+                <div class="card-body shadow-lg" style="border-radius: 10px">
+                    <h5 class="card-title mb-3">Все счета<div class="spinner-border spinner-border-sm ms-2" role="status" id="spinner-accounts"></div></h5>
+                    <div class="list-group" id="accounts">
+                        <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#create-account-modal"><i class="bi bi-plus-lg me-2"></i>Добавить счёт</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 px-4">
+            <div class="card full-height" style="border: None">
+                <div class="card-body shadow-lg" style="border-radius: 10px">
+                    <h5 class="card-title mb-3">В этом месяце<div class="spinner-border spinner-border-sm ms-2" role="status" id="spinner-operations"></div></h5>
+                    <ul class="list-group list-group-horizontal w-100">
+                        <li class="list-group-item w-50">
+                            <h5 class="card-title">Доходы</h5>
+                            <p class="card-text placeholder-glow" id="placeholder-incomes">
+                                <span class="placeholder col-6"></span>
+                            </p>
+                        </li>
+                        <li class="list-group-item w-50">
+                            <h5 class="card-title">Расходы</h5>
+                            <p class="card-text placeholder-glow" id="placeholder-expenses">
+                                <span class="placeholder col-6"></span>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 px-4">
+            <h3 class="mb-3">Расходы<div class="spinner-border spinner-border-sm ms-2" role="status" id="spinner-expenses"></div></h3>
+            <div id="expenses-categories"></div>
+            <div class="list-group w-100 mb-2 shadow-lg">
+                <button type="button" class="list-group-item list-group-item-action" style="border: None" data-bs-toggle="modal" data-bs-target="#create-category-modal"><i class="bi bi-plus-lg me-2"></i>Добавить категорию</button>
+            </div>
+        </div>
+        <div class="col-md-6 px-4">
+            <h3 class="mb-3">Доходы<div class="spinner-border spinner-border-sm ms-2" role="status" id="spinner-incomes"></div></h3>
+            <div id="incomes-categories"></div>
+            <div class="list-group w-100 mb-2 shadow-lg">
+                <button type="button" class="list-group-item list-group-item-action" style="border: None" data-bs-toggle="modal" data-bs-target="#create-category-modal"><i class="bi bi-plus-lg me-2"></i>Добавить категорию</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Модальное окно добавления счета -->
+<div class="modal" id="create-account-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Создание счета</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/create-account" id="account-create-form">
+                    <div class="mb-2">
+                        <label for="account-create-title" class="form-label">Название счета</label>
+                        <input id="account-create-title" class="form-control" maxlength="24">
+                    </div>
+                    <div class="mb-2">
+                        <label for="account-create-balance" class="form-label">Баланс</label>
+                        <input type="number" step="any" id="account-create-balance" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label for="account-create-currency" class="form-label">Валюта</label>
+                        <select class="form-select" aria-label="Default select example" id="account-create-currency">
+                            <option selected="" disabled="" value="">Выбрать</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-danger p-2" role="alert" id="alert-create-account"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary" id="account-create-button">Создать счет</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно изменения счета -->
+<div class="modal" id="edit-account-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Редактирование счета</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/edit-account" id="account-edit-form">
+                    <div class="mb-2">
+                        <label for="account-edit-title" class="form-label">Название счета</label>
+                        <input id="account-edit-title" class="form-control" maxlength="24">
+                    </div>
+                    <div class="mb-2">
+                        <label for="account-edit-balance" class="form-label">Баланс</label>
+                        <input type="number" step="any" id="account-edit-balance" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label for="account-edit-currency" class="form-label">Валюта</label>
+                        <select class="form-select" aria-label="Default select example" id="account-edit-currency">
+                            <option selected="" disabled="" value="">Выбрать</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-danger p-2" role="alert" id="alert-edit-account"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="pre-delete-account-button" data-bs-toggle="modal" data-bs-target="#delete-account-modal">Удалить</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary" id="account-edit-button">Изменить счет</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно удаления счета -->
+<div class="modal" tabindex="-1" id="delete-account-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Вы точно хотите удалить этот счет?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <p>Все операции связанные с этим счетом будут удалены. Счет нельзя будет восстановить</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-danger" id="delete-account-button">Удалить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно добавления категории -->
+<div class="modal" id="create-category-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Создание категории</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2">
+                    <label for="category-create-title" class="form-label">Название категории</label>
+                    <input id="category-create-title" class="form-control" maxlength="24">
+                </div>
+                <div class="mb-2">
+                    <label for="category-create-type" class="form-label">Тип категории</label>
+                    <select class="form-select" id="category-create-type" aria-label="Default select example">
+                        <option selected="" disabled="" value="">Выбрать</option>
+                        <option value="expense">Расход</option>
+                        <option value="income">Доход</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label for="category-create-color" class="form-label">Цвет категории</label>
+                    <input type="color" class="form-control form-control-color" id="category-create-color" value="#0008FF">
+                </div>
+                <div class="alert alert-danger p-2" role="alert" id="alert-create-category"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="category-create-button">Создать категорию</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно изменения категории -->
+<div class="modal" id="edit-category-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Редактирование категории</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/edit-category" id="category-edit-form">
+                    <div class="mb-2">
+                        <label for="category-edit-title" class="form-label">Название категории</label>
+                        <input id="category-edit-title" class="form-control" maxlength="24">
+                    </div>
+                    <div class="mb-2">
+                        <label for="category-edit-color" class="form-label">Цвет категории</label>
+                        <input type="color" class="form-control form-control-color" id="category-edit-color" value="#0008FF">
+                    </div>
+                    <div class="alert alert-danger p-2" role="alert" id="alert-edit-category"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="pre-delete-category-button" data-bs-toggle="modal" data-bs-target="#delete-category-modal">Удалить</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary" id="category-edit-button">Изменить счет</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно удаления категории -->
+<div class="modal" tabindex="-1" id="delete-category-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Вы точно хотите удалить эту категорию?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <p>Все операции связанные с этой категорией будут удалены. Категорию нельзя будет восстановить</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-danger" id="delete-category-button">Удалить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно создания расхода -->
+<div class="modal" id="create-operation-expense-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить расход</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/create-operation" id="operation-create-form">
+                    <div class="mb-2">
+                        <label for="operation-create-expense-accounts" class="form-label">Списать со счета</label>
+                        <select class="form-select" aria-label="Default select example" id="operation-create-expense-accounts">
+                            <option selected="" disabled="" value=""></option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label for="operation-expense-create-account-to" class="form-label">На категорию</label>
+                        <select class="form-select" aria-label="Default select example" id="operation-expense-create-account-to">
+                            <option selected="" disabled="" value=""></option>
+                        </select>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-8">
+                            <label for="operation-create-expense" class="form-label">Расход</label>
+                            <input type="number" step="any" id="operation-create-expense-amount" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <label for="operation-create-expense" class="form-label">Валюта</label>
+                            <select class="form-select" aria-label="Default select example" id="operation-create-expense-currency">
+                                <option value="RUB">RUB</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label for="operation-create-expense" class="form-label">Доп. информация</label>
+                        <input id="operation-create-expense-about" class="form-control" placeholder="Не обязательно">
+                    </div>
+                    <div class="alert alert-danger p-2" role="alert" id="alert-create-operation-expense"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-warning" id="category-expense-edit-button" data-bs-toggle="modal" data-bs-target="#edit-category-modal">Изменить категорию</button>
+                    <button type="submit" class="btn btn-primary" id="operation-create-expense-button">Добавить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно создания дохода -->
+<div class="modal" id="create-operation-income-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить доход</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/create-operation" id="operation-create-form">
+                    <div class="mb-2">
+                        <label for="operation-income-create-category" class="form-label">Пополнить с категории</label>
+                        <select class="form-select" aria-label="Default select example" id="operation-income-create-category">
+                            <option selected="" disabled="" value=""></option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label for="operation-create-income-accounts" class="form-label">На счет</label>
+                        <select class="form-select" aria-label="Default select example" id="operation-create-income-accounts">
+                            <option selected="" disabled="" value=""></option>
+                        </select>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-8">
+                            <label for="operation-create-income-amount" class="form-label">Доход</label>
+                            <input type="number" step="any" id="operation-create-income-amount" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <label for="operation-create-income" class="form-label">Валюта</label>
+                            <select class="form-select" aria-label="Default select example" id="operation-create-income-currency">
+                                <option value="RUB">RUB</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label for="operation-create-income" class="form-label">Доп. информация</label>
+                        <input id="operation-create-income-about" class="form-control" placeholder="Не обязательно">
+                    </div>
+                    <div class="alert alert-danger p-2" role="alert" id="alert-create-operation-income"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-warning" id="category-income-edit-button" data-bs-toggle="modal" data-bs-target="#edit-category-modal">Изменить категорию</button>
+                    <button type="submit" class="btn btn-primary" id="operation-create-income-button">Добавить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+<script src="{{ url_for('static', path='/js/server_ip.js') }}"></script>
+<script src="{{ url_for('static', path='/js/dashboard_functions.js') }}"></script>
+<script src="{{ url_for('static', path='/js/dashboard.js') }}"></script>
+{% endblock %}
