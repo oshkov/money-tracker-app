@@ -73,9 +73,6 @@ deleteOperationButton.addEventListener('click', function() {
 
     deleteOperation(jsonData).then(data => {
         if (data.status == 'success') {
-            // Изменение баланса счета
-            editAccountBalanceAfterDeleteOperation(operationID)
-
             // Операция удаляется из переменной
             deleteLocalOperations(operationID)
 
@@ -142,9 +139,6 @@ buttonEditOperation.addEventListener('click', function(event) {
 
     editOperation(jsonData).then(edit => {
         if (edit.status == 'success') {
-            // Изменение баланса счета
-            editAccountBalance(newOperation, operationBeforeEdit)
-
             // Счет удаляется из переменной
             editLocalOperations(newOperation)
 

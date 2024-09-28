@@ -19,3 +19,5 @@ DB_NAME_TEST = os.environ.get('DB_NAME_TEST')
 DB_USER_TEST = os.environ.get('DB_USER_TEST')
 DB_PASSWORD_TEST = os.environ.get('DB_PASSWORD')
 DATABASE_URL_TEST = f'postgresql+asyncpg://{DB_USER_TEST}:{DB_PASSWORD_TEST}@{DB_HOST_TEST}:{DB_PORT_TEST}/{DB_NAME_TEST}'
+
+SERVER_IP = os.environ.get('SERVER_IP')

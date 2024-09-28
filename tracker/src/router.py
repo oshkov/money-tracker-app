@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
 import httpx
 
+import src.config as config
 from src.database import get_async_session
 from src.schemas import (
     AccountCreate,
@@ -52,7 +53,7 @@ async def get_current_user(token):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                'http://185.237.165.219:8002/get-current-user',
+                f'http://{config.SERVER_IP}:8002/get-current-user',
                 headers={'Authorization': f'Bearer {token}'}
             )
             user = response.json()['data']

@@ -173,14 +173,14 @@ function updateOperationsList(operations, categories, accounts) {
                 document.getElementById('operation-edit-from-account-label').textContent = 'Со счета'
                 document.getElementById('operation-edit-to-account-label').textContent = 'На категорию'
                 updateAccountsSelectors(accounts, 'operation-edit-from-account')
-                updateCtegoriesSelectors(categories, 'operation-edit-to-account')
+                updateCategoriesSelectors(categories, 'operation-edit-to-account', operationType)
             }
             if (operationType == 'income') {
                 document.getElementById('operation-edit-amount-label').textContent = 'Доход'
                 document.getElementById('operation-edit-from-account-label').textContent = 'С категории'
                 document.getElementById('operation-edit-to-account-label').textContent = 'На счет'
                 updateAccountsSelectors(accounts, 'operation-edit-to-account')
-                updateCtegoriesSelectors(categories, 'operation-edit-from-account')
+                updateCategoriesSelectors(categories, 'operation-edit-from-account', operationType)
             }
 
             document.getElementById('operation-edit-amount').value = amount
@@ -211,7 +211,7 @@ function updateAccountsSelectors(accounts, blockID) {
 }
 
 
-function updateCtegoriesSelectors(categories, blockID) {
+function updateCategoriesSelectors(categories, blockID, operationType) {
     // Получение элементов select
     const categoriesSelect = document.getElementById(blockID)
 
@@ -220,12 +220,14 @@ function updateCtegoriesSelectors(categories, blockID) {
 
     // Создание выбора категорий при изменении операции
     categories.forEach(category => {
-        let option = document.createElement('option');
-        option.value = category.category_id;
-        option.textContent = category.title;
+        if (operationType == category.category_type) {
+            let option = document.createElement('option');
+            option.value = category.category_id;
+            option.textContent = category.title;
 
-        // Добавляем option в select элемент
-        categoriesSelect.appendChild(option);
+            // Добавляем option в select элемент
+            categoriesSelect.appendChild(option);
+        }
     });
 }
 
@@ -300,119 +302,6 @@ function editOperation(jsonData) {
         return data
     })
     .catch((error) => {});
-}
-
-
-function editAccountBalance(newOperation, operationBeforeEdit) {
-    let data
-    let accountInfo
-
-    if (operationBeforeEdit.operation_type == 'income') {
-        // Получение данных о счете
-        for (const account of accounts) {
-            if (operationBeforeEdit.to_account == account.account_id) {
-                accountInfo = account
-            }
-        }
-
-        newBalance = accountInfo.balance - operationBeforeEdit.amount + parseFloat(newOperation.amount)
-        data = {
-            id: accountInfo.account_id,
-            title: accountInfo.title,
-            balance: newBalance,
-            currency: accountInfo.currency
-        }
-    }
-    if (operationBeforeEdit.operation_type == 'expense') {
-        // Получение данных о счете
-        for (const account of accounts) {
-            if (operationBeforeEdit.from_account == account.account_id) {
-                accountInfo = account
-            }
-        }
-
-        newBalance = accountInfo.balance + operationBeforeEdit.amount - parseFloat(newOperation.amount)
-        data = {
-            id: accountInfo.account_id,
-            title: accountInfo.title,
-            balance: newBalance,
-            currency: accountInfo.currency
-        }
-    }
-    const jsonData = JSON.stringify(data);
-
-    // Редактирование счета
-    fetch(`http://${ip}:8003/edit-account`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: jsonData
-    })
-}
-
-
-function editAccountBalanceAfterDeleteOperation(operationID) {
-    let operationInfo
-    let accountInfo
-    let newBalance
-
-    // Получение данных об операции
-    for (const operation of operations) {
-        if (operationID == operation.operation_id) {
-            operationInfo = operation
-        }
-    }
-
-    if (operationInfo.operation_type == 'income') {
-        for (const account of accounts) {
-            if (operationInfo.to_account == account.account_id) {
-                accountInfo = account
-            }
-        }
-        newBalance = parseFloat(accountInfo.balance) - parseFloat(operationInfo.amount)
-    }
-    if (operationInfo.operation_type == 'expense') {
-        for (const account of accounts) {
-            if (operationInfo.from_account == account.account_id) {
-                accountInfo = account
-            }
-        }
-        newBalance = parseFloat(accountInfo.balance) + parseFloat(operationInfo.amount)
-    }
-    
-    data = {
-        id: accountInfo.account_id,
-        title: accountInfo.title,
-        balance: newBalance,
-        currency: accountInfo.currency
-    }
-
-    editLocalAccounts(data)
-
-    const jsonData = JSON.stringify(data);
-
-    // Редактирование счета
-    fetch(`http://${ip}:8003/edit-account`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: jsonData
-    })
-
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            console.log(data)
-        }
-        if (data.status === 'error') {
-            console.log(data)
-        }
-    })
-    .catch((error) => {console.log(error)});
 }
 
 

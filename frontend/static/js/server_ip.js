@@ -1,1 +1,1 @@
-const ip = '185.237.165.219'
+const ip = location.hostname

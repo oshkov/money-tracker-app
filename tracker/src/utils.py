@@ -253,6 +253,17 @@ async def delete_operation(session, operation: OperationDelete):
     try:
         operation_info = await session.get(Operation, operation.id)
 
+        # Возврат баланса на счет
+        if operation_info.operation_type == 'income':
+            # Вычет с баланса счета
+            account_info = await session.get(Account, operation_info.to_account)
+            account_info.balance = account_info.balance - operation_info.amount
+
+        elif operation_info.operation_type == 'expense':
+            # Пополнение баланса счета
+            account_info = await session.get(Account, operation_info.from_account)
+            account_info.balance = account_info.balance + operation_info.amount
+
         await session.delete(operation_info)
 
         # Добавление данных в бд и сохранение
@@ -263,16 +274,45 @@ async def delete_operation(session, operation: OperationDelete):
 
 
 # Изменение операции
-async def edit_operation(session, operation: OperationEdit):
+async def edit_operation(session, new_operation: OperationEdit):
 
     try:
-        operation_info = await session.get(Operation, operation.id)
+        operation_info = await session.get(Operation, new_operation.id)
 
-        operation_info.from_account = operation.from_account
-        operation_info.to_account = operation.to_account
-        operation_info.amount = operation.amount
-        operation_info.currency = operation.currency
-        operation_info.about = operation.about
+        # Если доход
+        if operation_info.operation_type == 'income':
+            account_info = await session.get(Account, operation_info.to_account)
+
+            # Если счет в операции не изменился, то изменяется баланс счета
+            if operation_info.to_account == new_operation.to_account:
+                account_info.balance = account_info.balance - operation_info.amount + new_operation.amount
+
+            # Если счет в операции изменился, то вычетается с прошлого счета и зачисляется на новый
+            else:
+                new_account_info = await session.get(Account, new_operation.to_account)
+                account_info.balance = account_info.balance - operation_info.amount
+                new_account_info.balance = new_account_info.balance + new_operation.amount
+
+        # Если расход
+        elif operation_info.operation_type == 'expense':
+            account_info = await session.get(Account, operation_info.from_account)
+
+            # Если счет в операции не изменился, то изменяется баланс счета
+            if operation_info.from_account == new_operation.from_account:
+                account_info.balance = account_info.balance + operation_info.amount - new_operation.amount
+
+            # Если счет в операции изменился, то прибавляется к прошлому счету и вычитается с нового
+            else:
+                new_account_info = await session.get(Account, new_operation.from_account)
+                account_info.balance = account_info.balance + operation_info.amount
+                new_account_info.balance = new_account_info.balance - new_operation.amount            
+
+        # Изменние данных об операции
+        operation_info.from_account = new_operation.from_account
+        operation_info.to_account = new_operation.to_account
+        operation_info.amount = new_operation.amount
+        operation_info.currency = new_operation.currency
+        operation_info.about = new_operation.about
 
         # Добавление данных в бд и сохранение
         await session.commit()
